@@ -38,7 +38,8 @@ resource "aws_iam_policy" "allow_s3" {
     Statement = [{
       Effect = "Allow"
       Action = [
-        "s3:PutObject"
+        "s3:PutObject",
+        "s3:GetObject"
       ]
       Resource = "${aws_s3_bucket.cloudweave_s3_bucket.arn}/*"
     }]
@@ -77,7 +78,8 @@ resource "aws_iam_policy" "allow_codebuild" {
     Statement = [{
       Effect = "Allow"
       Action = [
-        "codebuild:StartBuild"
+        "codebuild:StartBuild",
+        "codebuild:BatchGetBuilds"
       ]
       Resource = "*"
     }]
@@ -101,6 +103,36 @@ resource "aws_iam_role" "codebuild_role" {
       Action = "sts:AssumeRole"
     }]
   })
+}
+
+resource "aws_iam_policy" "allow_logs" {
+  name_prefix = "allow_logs"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Action = [
+        "logs:CreateLogStream",
+        "logs:CreateLogGroup"
+      ]
+      Resource = "*"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach-codebuild-logs-policy" {
+  role = aws_iam_role.codebuild_role.name
+  policy_arn = aws_iam_policy.allow_logs.arn  
+}
+
+resource "aws_iam_role_policy_attachment" "attach-codebuild-codebuild-policy" {
+  role = aws_iam_role.codebuild_role.name
+  policy_arn = aws_iam_policy.allow_codebuild.arn
+}
+
+resource "aws_iam_role_policy_attachment" "attach-codebuild-s3-policy" {
+  role       = aws_iam_role.codebuild_role.name
+  policy_arn = aws_iam_policy.allow_s3.arn
 }
 
 resource "aws_codebuild_project" "cloudweave" {

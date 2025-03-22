@@ -203,4 +203,19 @@ resource "aws_codepipeline" "cloudweave-codepipeline" {
       }
     }
   }
+  stage {
+    name = "Deploy"
+    action {
+      name = "DeployAction"
+      category = "Deploy"
+      version = "1"
+      owner = "AWS"
+      provider = "S3"
+      input_artifacts = ["BuildOutput"]
+      configuration = {
+        BucketName = aws_s3_bucket.cloudweave_s3_bucket.bucket
+        Extract = "true"
+      }
+    }
+  }
 }

@@ -17,6 +17,18 @@ resource "aws_s3_bucket" "cloudweave_s3_bucket" {
   force_destroy = true
 }
 
+resource "aws_s3_bucket_website_configuration" "cloudweave_s3_website_configuration" {
+  bucket = aws_s3_bucket.cloudweave_s3_bucket.bucket
+
+  index_document {
+    suffix = "index.html"
+  }
+
+  error_document {
+    key = "error.html"
+  }
+}
+
 resource "aws_iam_role" "codepipeline_role" {
   name_prefix = "cloudweave-codepipeline"
   assume_role_policy = jsonencode({

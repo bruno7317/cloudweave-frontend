@@ -13,9 +13,10 @@ phases:
       - echo "Running lint check..."
       - npm run lint
       - echo "Building NextJS application..."
-      - npm run export
+      - npm run build
 
 artifacts:
+  base-directory: out
   files:
     - "**/*"
   name: nextjs-build-output

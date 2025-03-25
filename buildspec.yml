@@ -13,7 +13,7 @@ phases:
       - echo "Running lint check..."
       - npm run lint
       - echo "Building NextJS application..."
-      - npm run build
+      - npm run export
 
 artifacts:
   files:

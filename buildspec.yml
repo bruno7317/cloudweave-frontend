@@ -11,14 +11,14 @@ phases:
   pre_build:
     commands:
       - echo "Logging in to Amazon ECR..."
-      - IMAGE_URI=$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:1.0
+      - IMAGE_URI=$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY:1.0
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
 
   build:
     commands:
       - echo "Building Docker image..."
-      - docker build -t $REPO_NAME .
-      - docker tag $REPO_NAME:latest $IMAGE_URI
+      - docker build -t $REPOSITORY .
+      - docker tag $REPOSITORY:latest $IMAGE_URI
 
   post_build:
     commands:

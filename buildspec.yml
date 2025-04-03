@@ -24,3 +24,4 @@ phases:
     commands:
       - echo "Pushing image to ECR..."
       - docker push $IMAGE_URI
+ 

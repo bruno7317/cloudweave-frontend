@@ -24,6 +24,8 @@ export default function Home() {
   
   return (
     <main>
+      <h1>Welcome to CloudWeave.</h1>
+      <p>Application Status:</p>
       {apiStatus === null ? (
         <p>Checking API...</p>
       ) : apiStatus ? (

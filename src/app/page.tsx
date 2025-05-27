@@ -8,7 +8,11 @@ export default function Home() {
   useEffect(() => {
     const checkHealth = async () => {
       try {
-        const response = await fetch('http://localhost:8000/')
+        const response = await fetch('http://localhost:8000/graphql', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: '{ __typename }' })
+        });
         setApiStatus(response.ok)
       } catch (error) {
         console.log(error)

@@ -1,36 +1,25 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { gql, useQuery } from "@apollo/client"
+
+const HEALTH_CHECK_QUERY = gql`
+  query {
+    __typename
+  }
+`
 
 export default function Home() {
-  const [apiStatus, setApiStatus] = useState<boolean|null>(null)
-  
-  useEffect(() => {
-    const checkHealth = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/graphql', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ query: '{ __typename }' })
-        });
-        setApiStatus(response.ok)
-      } catch (error) {
-        console.log(error)
-        setApiStatus(false)
-      }
-    }
+  const { data, loading, error } = useQuery(HEALTH_CHECK_QUERY, {
+    pollInterval: 5000
+  })
 
-    checkHealth()
-    const interval = setInterval(checkHealth, 5000)
-
-    return () => clearInterval(interval)
-  }, [])
+  const apiStatus = !loading && !error
   
   return (
     <main>
       <h1>Welcome to CloudWeave!</h1>
       <p>Application Status:</p>
-      {apiStatus === null ? (
+      {loading ? (
         <p>Checking API...</p>
       ) : apiStatus ? (
         <p>API connected ✅</p>
